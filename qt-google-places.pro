@@ -4,6 +4,8 @@ TARGET = qt-google-places
 
 QT += gui network webkit
 
+INCLUDEPATH += ../qjson/include
+
 
 linux* {
     LIBS += -L../qjson/build/lib -lqjson

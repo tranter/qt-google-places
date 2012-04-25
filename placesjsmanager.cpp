@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include <qjson/serializer.h>
+#include <QJson/Serializer>
 
 PlacesJsManager::
 PlacesJsManager(QObject *parent) :

@@ -2,7 +2,7 @@
 #include "placesdatamanager.h"
 
 #include <QVariant>
-#include <qjson/parser.h>
+#include <QJson/Parser>
 
 #include <QDebug>
 
