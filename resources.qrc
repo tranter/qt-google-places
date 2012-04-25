@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/ico">
+        <file alias="ics">images/ics_logo.png</file>
+        <file>images/ics_logo.gif</file>
+    </qresource>
+    <qresource prefix="/google">
+        <file alias="powered-by-google">images/google/powered-by-google-on-non-white.png</file>
+        <file alias="powered-by-google-on-white">images/google/powered-by-google-on-white.png</file>
+    </qresource>
+    <qresource prefix="/html">
+        <file alias="index.html">html_js/index.html</file>
+        <file alias="init.js">html_js/init.js</file>
+        <file alias="tools.js">html_js/tools.js</file>
+    </qresource>
+</RCC>
