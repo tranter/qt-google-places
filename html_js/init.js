@@ -1,6 +1,8 @@
 var map;
-var markers = [];
+var markers= [];
 var QtPlaces;
+
+var searchCircle;
 
 function initialize(x, y)
 {
@@ -13,4 +15,3 @@ function initialize(x, y)
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions)
     //google.maps.event.addListener(map, "click", function() {} )
 }
-

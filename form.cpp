@@ -174,6 +174,14 @@ void Form::
 findedPlaces(const QVariant & data)
 {
     m_pPlacesModel->setData(data);
+    m_pJsManager->removeMarkers();
+    m_pJsManager->createMarkers(data.toList());
+
+//    QSettings settings(m_organizationName, m_appName);
+//    QString radius = settings.value("radius").toString();
+//    QString location = m_pJsManager->getCurrentPointOfView();
+
+//    m_pJsManager->recreateSearchCircle(location, radius);
 }
 
 void Form::

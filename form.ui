@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QLineEdit" name="searchLineEdit"/>
@@ -29,7 +29,20 @@
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
-         <widget class="QListView" name="autocompleteListView"/>
+         <widget class="QListView" name="autocompleteListView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>150</height>
+           </size>
+          </property>
+         </widget>
          <widget class="QListView" name="placesListView"/>
         </widget>
        </item>

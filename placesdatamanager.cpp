@@ -58,6 +58,7 @@ replyFinished(QNetworkReply * reply) const
     QString strUrl = reply->url().toString();
     QString data = reply->readAll();
 
+    //
     //qDebug() << Q_FUNC_INFO << "\n" << strUrl << "\n" << data;
 
     QObject * origObject = reply->request().originatingObject();

@@ -2,7 +2,7 @@
 #define PLACESJSMANAGER_H
 
 #include <QObject>
-#include <QString>
+#include <QVariantList>
 
 class QWebFrame;
 
@@ -13,9 +13,15 @@ public:
     explicit PlacesJsManager(QObject *parent = 0);
     
     void setFrame(QWebFrame * frame) { m_pFrame = frame; }
-
     QString getCurrentPointOfView() const;
     
+    void removeMarkers();
+    void createMarkers(const QVariantList & list);
+    void recreateSearchCircle(const QString & location, const QString & radius);
+
+private:
+    QVariant eval(const QString & script) const;
+
 private:
     QWebFrame * m_pFrame;
 };
