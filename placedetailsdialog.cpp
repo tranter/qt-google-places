@@ -17,6 +17,7 @@ void PlaceDetailsDialog::
 setName(const QString & v)
 {
     ui->nameLabel->setText(v);
+    setWindowTitle(tr("Place details: ") + v);
 }
 
 void PlaceDetailsDialog::
@@ -40,6 +41,7 @@ setInterPhone(const QString & v)
 void PlaceDetailsDialog::
 setIcon(const QString & v)
 {
+//    QApplication::palette().brush( QPalette::Window ).color().rgb()
     ui->webView->setHtml(
         QString("<html><body style=\"background: #ffffff url('%1') no-repeat center center\"/></body></html>")
         .arg(v)

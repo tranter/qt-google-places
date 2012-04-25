@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(m_pForm);
 
     connect(ui->actionSettings, SIGNAL(triggered()), m_pForm, SLOT(editSettings()));
+    connect(ui->actionAdd_place, SIGNAL(triggered()), m_pForm, SLOT(addPlace()));
 }
 
 MainWindow::~MainWindow()

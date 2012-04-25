@@ -35,7 +35,14 @@
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionAdd_place"/>
+   </widget>
    <addaction name="menuMenu"/>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSettings">
@@ -52,6 +59,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionAdd_place">
+   <property name="text">
+    <string>Add place</string>
+   </property>
+  </action>
+  <action name="actionDelete_place">
+   <property name="text">
+    <string>Delete place</string>
    </property>
   </action>
  </widget>

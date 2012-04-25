@@ -5,6 +5,8 @@
 #include "settingsdialog.h"
 #include "variantlistmodel.h"
 #include "placedetailsdialog.h"
+#include "tools.h"
+#include "placedialog.h"
 
 #include <QtGui>
 #include <QtWebKit>
@@ -48,7 +50,7 @@ Form(QWidget *parent) :
 
 
     m_pDataManager = new PlacesDataManager(this);
-    m_pDataManager->setApiKey( m_strApiKey );
+    //m_pDataManager->setApiKey( m_strApiKey );
 
     m_pJsManager = new PlacesJsManager(this);
     m_pJsManager->setFrame( ui->webView->page()->mainFrame() );
@@ -70,6 +72,7 @@ Form(QWidget *parent) :
     connect(m_pDataManager, SIGNAL(errorOccured(QString)), this, SLOT(errorOccured(QString)));
     connect(m_pDataManager, SIGNAL(autocompleteData(QVariant)), this, SLOT(autocompleteData(QVariant)));
     connect(m_pDataManager, SIGNAL(findedPlaces(QVariant)), this, SLOT(findedPlaces(QVariant)));
+    connect(m_pDataManager, SIGNAL(requestStatus(QString,QVariant)), this, SLOT(requestStatus(QString,QVariant)));
 
     connect(m_pJsManager, SIGNAL(markerClicked(QString)), this, SLOT(requestPlaceInformation(QString)));
     connect(m_pDataManager, SIGNAL(placeDetails(QVariant)), this, SLOT(showPlaceInformation(QVariant)));
@@ -214,14 +217,8 @@ autocompleteItemDoubleClicked(const QModelIndex & index)
 void Form::
 setupSearchOptionComboboxes()
 {
-    ui->langageComboBox->addItems(
-        QStringList() << "en" << "fr" << "ja" << "pl" << "ru" << "sl"
-    );
-    ui->placesTypesComboBox->addItems(
-        QStringList()
-                << "airport" << "bank" << "bar" << "bus_station"
-                << "cafe" << "food" << "museum" << "park" << "police" << "zoo"
-    );
+    ui->langageComboBox->addItems( Tools::getLanguageList() );
+    ui->placesTypesComboBox->addItems( Tools::getTypesList() );
     ui->langageComboBox->setCurrentIndex(-1);
     ui->placesTypesComboBox->setCurrentIndex(-1);
 }
@@ -268,3 +265,29 @@ showPlaceInformation(const QVariant & info)
 
     details.exec();
 }
+
+void Form::
+requestStatus(const QString & operation, const QVariant & value)
+{
+    QString strStatus = value.toMap()["status"].toString();
+    bool status = (! value.isValid()) || strStatus != "OK";
+    if( status ) {
+        errorOccured( QString("Operation: \"%1\" failed\nReturned status: %2").arg(operation, strStatus) );
+        return;
+    }
+
+    QMessageBox::information(this, operation, QString("Operation: \"%1\" was successful").arg(operation));
+}
+
+void Form::
+addPlace()
+{
+    PlaceDialog dialog(this);
+    dialog.setLocation( m_pJsManager->getCurrentPointOfView() );
+
+    if( dialog.exec() != QDialog::Accepted )
+        return;
+
+    m_pDataManager->addPlace(m_strApiKey, dialog.preparedData() );
+}
+

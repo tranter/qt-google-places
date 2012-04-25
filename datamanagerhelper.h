@@ -57,4 +57,16 @@ public:
     { }
 };
 
+class DataManagerCheckStatus : public DataManagerHelper
+{
+    void evalData(const QVariant & data);
+    QString m_operation;
+
+public:
+    DataManagerCheckStatus( const QString & operation, PlacesDataManager * p = 0) :
+        DataManagerHelper(p),
+        m_operation(operation)
+    { }
+};
+
 #endif // DATAMANAGERHELPER_H

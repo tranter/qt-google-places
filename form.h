@@ -35,6 +35,10 @@ private slots:
     void requestPlaceInformation(const QString & reference);
     void showPlaceInformation(const QVariant & info);
 
+    void requestStatus(const QString & operation, const QVariant & value);
+
+    void addPlace();
+
 private:
     void setupSearchOptionComboboxes();
 

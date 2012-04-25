@@ -12,4 +12,8 @@
         <file alias="init.js">html_js/init.js</file>
         <file alias="tools.js">html_js/tools.js</file>
     </qresource>
+    <qresource prefix="/other">
+        <file alias="types.txt">other_files/supported_types.txt</file>
+        <file alias="languages.txt">other_files/supported_languages.txt</file>
+    </qresource>
 </RCC>
