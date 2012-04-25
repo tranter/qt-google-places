@@ -4,9 +4,12 @@
 #include "placesjsmanager.h"
 #include "settingsdialog.h"
 #include "variantlistmodel.h"
+#include "placedetailsdialog.h"
 
 #include <QtGui>
 #include <QtWebKit>
+
+#include <qjson/qobjecthelper.h>
 
 /*! \brief Workaround pan/zoom problem with Google Map and QWebView:
  *
@@ -66,6 +69,9 @@ Form(QWidget *parent) :
     connect(m_pDataManager, SIGNAL(errorOccured(QString)), this, SLOT(errorOccured(QString)));
     connect(m_pDataManager, SIGNAL(autocompleteData(QVariant)), this, SLOT(autocompleteData(QVariant)));
     connect(m_pDataManager, SIGNAL(findedPlaces(QVariant)), this, SLOT(findedPlaces(QVariant)));
+
+    connect(m_pJsManager, SIGNAL(markerClicked(QString)), this, SLOT(requestPlaceInformation(QString)));
+    connect(m_pDataManager, SIGNAL(placeDetails(QVariant)), this, SLOT(showPlaceInformation(QVariant)));
 }
 
 Form::
@@ -233,4 +239,31 @@ gotoPlace(const QModelIndex & index)
     }
 
     m_pJsManager->gotoPlace( data, 17 );
+}
+
+void Form::
+requestPlaceInformation(const QString & reference)
+{
+    m_pDataManager->getPlaceDetails( m_strApiKey, reference, ui->langageComboBox->currentText() );
+}
+
+void Form::
+showPlaceInformation(const QVariant & info)
+{
+    QVariantMap infoMap(info.toMap());
+    if( infoMap.isEmpty() ) {
+        errorOccured( "Returned result is empty" );
+        return;
+    }
+    if( infoMap["status"].toString() != "OK" )  {
+        errorOccured( "Returned result status: " + infoMap["status"].toString() );
+        return;
+    }
+
+    QVariantMap map( info.toMap()["result"].toMap() );
+
+    PlaceDetailsDialog details;
+    QJson::QObjectHelper::qvariant2qobject(map, & details);
+
+    details.exec();
 }

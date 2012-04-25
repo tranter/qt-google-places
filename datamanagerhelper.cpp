@@ -40,3 +40,10 @@ evalData(const QVariant & data)
     QVariant results = parsedJson.toMap()["results"];
     if( results.isValid() ) manager->findedPlaces( results );
 }
+
+void DataManagerPlaceDetails::
+evalData(const QVariant & data)
+{
+    QVariant parsedJson = parseJsonData(data);
+    if( parsedJson.isValid() ) manager->placeDetails( parsedJson );
+}

@@ -10,6 +10,7 @@ class PlacesDataManager : public QObject
     friend class DataManagerHelper;
     friend class DataManagerAutocompleter;
     friend class DataManagerSearch;
+    friend class DataManagerPlaceDetails;
 
 public:
     explicit PlacesDataManager(QObject *parent = 0);
@@ -29,10 +30,13 @@ public slots:
             bool sensor = false
     );
 
+    void getPlaceDetails( const QString & apiKey, const QString & reference, const QString & language = QString(), bool sensor = false );
+
 signals:
     void errorOccured(const QString & error) const;
     void autocompleteData(const QVariant & data);
     void findedPlaces(const QVariant & data);
+    void placeDetails(const QVariant & data);
 
 private slots:
     void replyFinished(QNetworkReply * reply) const;

@@ -27,7 +27,8 @@ SOURCES += \
     settingsdialog.cpp \
     placesjsmanager.cpp \
     datamanagerhelper.cpp \
-    variantlistmodel.cpp
+    variantlistmodel.cpp \
+    placedetailsdialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -36,12 +37,14 @@ HEADERS += \
     settingsdialog.h \
     placesjsmanager.h \
     datamanagerhelper.h \
-    variantlistmodel.h
+    variantlistmodel.h \
+    placedetailsdialog.h
 
 FORMS += \
     mainwindow.ui \
     form.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    placedetailsdialog.ui
 
 RESOURCES += \
     resources.qrc

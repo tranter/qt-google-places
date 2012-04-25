@@ -21,6 +21,9 @@ public:
     void gotoPlace(const QVariant & place, int zoom);
     void gotoLocation( const QString & location, int zoom );
 
+signals:
+    void markerClicked(const QString & reference);
+
 private:
     QVariant eval(const QString & script) const;
 

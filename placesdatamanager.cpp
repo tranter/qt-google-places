@@ -108,7 +108,7 @@ searchPlace(
     bool sensor
 ) {
     qDebug() << Q_FUNC_INFO;
-    qDebug() << apiKey << types << location << radius << sensor;
+    qDebug() << apiKey << keyword << language<< types<< location << radius << sensor;
 
     if( location.isEmpty() ) { emit errorOccured("Location is empty"); return; }
     if( radius.isEmpty() )   { emit errorOccured("Radius is empty"); return; }
@@ -128,3 +128,17 @@ searchPlace(
     sendRequest(url, new DataManagerSearch(this));
 }
 
+void PlacesDataManager::
+getPlaceDetails( const QString & apiKey, const QString & reference, const QString & language, bool sensor )
+{
+    QString url = QString(
+        "https://maps.googleapis.com/maps/api/place/details/json?"
+        "key=%1&"
+        "reference=%2&"
+        "sensor=%3"
+    ).arg(apiKey, reference, sensor ? "true" : "false");
+
+    if( ! language.isEmpty() ) url.append("&language=").append(language);
+
+    sendRequest(url, new DataManagerPlaceDetails(this));
+}

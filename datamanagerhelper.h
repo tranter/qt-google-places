@@ -24,6 +24,7 @@ protected:
     PlacesDataManager * manager;
 };
 
+
 class DataManagerAutocompleter : public DataManagerHelper
 {
     void evalData(const QVariant & data);
@@ -34,12 +35,24 @@ public:
     { }
 };
 
+
 class DataManagerSearch : public DataManagerHelper
 {
     void evalData(const QVariant & data);
 
 public:
     DataManagerSearch( PlacesDataManager * p = 0) :
+        DataManagerHelper(p)
+    { }
+};
+
+
+class DataManagerPlaceDetails : public DataManagerHelper
+{
+    void evalData(const QVariant & data);
+
+public:
+    DataManagerPlaceDetails( PlacesDataManager * p = 0) :
         DataManagerHelper(p)
     { }
 };

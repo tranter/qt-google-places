@@ -18,6 +18,10 @@ function appendMarker(jsonObj)
         icon: jsonObj.icon
     });
 
+    google.maps.event.addListener(marker, 'click', function() {
+        QtPlaces.markerClicked( jsonObj['reference'] )
+    });
+
     markers.push(marker)
 }
 
