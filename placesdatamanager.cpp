@@ -1,6 +1,7 @@
 #include "placesdatamanager.h"
-
 #include "datamanagerhelper.h"
+
+#include <qjson/serializer.h>
 
 #include <QNetworkReply>
 #include <QApplication>
@@ -16,21 +17,35 @@ PlacesDataManager(QObject *parent) :
 
 void
 PlacesDataManager::
-sendRequest(const QString & url, DataManagerHelper * helper)
+sendRequest(const QString & url, DataManagerHelper * helper, RequestType type, const QByteArray & data)
 {
     QNetworkRequest request;
     request.setOriginatingObject(helper);
 
     QUrl percentEncUrl( QUrl::toPercentEncoding(url, ":/?=&,", " ") );
 
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << '\n' << Q_FUNC_INFO;
     qDebug() << percentEncUrl;
+    qDebug() << data;
 
     request.setUrl( percentEncUrl );
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    m_NetworkAccessManager.get( request );
+    if( type == Post || type == Put )
+    {
+        request.setRawHeader("Content-Type", "application/json");
+        //request.setRawHeader("Content-Length", QString::number(data.size()).toLatin1());
+        //request.setRawHeader("Host", "maps.googleapis.com");
+    }
+
+    switch(type)
+    {
+    case Get:       m_NetworkAccessManager.get( request ); break;
+    case Post:      m_NetworkAccessManager.post( request, data ); break;
+    case Put:       m_NetworkAccessManager.put( request, data ); break;
+    case Delete:    m_NetworkAccessManager.deleteResource( request ); break;
+    }
 }
 
 bool PlacesDataManager::
@@ -59,7 +74,7 @@ replyFinished(QNetworkReply * reply) const
     QString data = reply->readAll();
 
     //
-    //qDebug() << Q_FUNC_INFO << "\n" << strUrl << "\n" << data;
+    qDebug() << Q_FUNC_INFO << "\n" << reply->operation() <<  strUrl << "\n" << data;
 
     QObject * origObject = reply->request().originatingObject();
     if( ! origObject ) {
@@ -141,4 +156,32 @@ getPlaceDetails( const QString & apiKey, const QString & reference, const QStrin
     if( ! language.isEmpty() ) url.append("&language=").append(language);
 
     sendRequest(url, new DataManagerPlaceDetails(this));
+}
+
+void PlacesDataManager::
+addPlace(const QString & apiKey, const QVariant & place, bool sensor )
+{
+    QString url = QString(
+        "https://maps.googleapis.com/maps/api/place/add/json?"
+        "key=%1&"
+        "sensor=%2"
+    ).arg( apiKey, sensor ? "true" : "false" );
+
+    QJson::Serializer serializer;
+    QByteArray json = serializer.serialize(place);
+
+    sendRequest(url, new DataManagerCheckStatus(tr("Adding new place"), this), Post, json);
+}
+
+void PlacesDataManager::
+deletePlace(const QString & apiKey, const QString & reference, bool sensor)
+{
+    QString url = QString(
+        "https://maps.googleapis.com/maps/api/place/delete/json?"
+        "key=%1&"
+        "sensor=%2"
+    ).arg( apiKey, sensor ? "true" : "false" );
+
+    QString json = QString("{ \"reference\": \"%1\" }").arg(reference);
+    sendRequest(url, new DataManagerCheckStatus(tr("Deleting place"), this), Delete, json.toLatin1());
 }

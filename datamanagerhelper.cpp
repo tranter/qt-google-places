@@ -47,3 +47,10 @@ evalData(const QVariant & data)
     QVariant parsedJson = parseJsonData(data);
     if( parsedJson.isValid() ) manager->placeDetails( parsedJson );
 }
+
+void DataManagerCheckStatus::
+evalData(const QVariant & data)
+{
+    QVariant parsedJson = parseJsonData(data);
+    manager->requestStatus( m_operation, parsedJson );
+}
