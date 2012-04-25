@@ -262,7 +262,17 @@ showPlaceInformation(const QVariant & info)
     PlaceDetailsDialog details;
     QJson::QObjectHelper::qvariant2qobject(map, & details);
 
-    details.exec();
+    if( details.exec() == PlaceDetailsDialog::ToRemove
+        &&
+            QMessageBox::question(
+                this,
+                trUtf8("Delete place"),
+                trUtf8("Do you really whant to delete place: %1").arg(map["name"].toString()),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::No
+            ) == QMessageBox::Yes
+    ) {
+        m_pDataManager->deletePlace(m_strApiKey, details.reference());
+    }
 }
 
 void Form::

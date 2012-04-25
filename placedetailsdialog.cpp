@@ -1,11 +1,16 @@
 #include "placedetailsdialog.h"
 #include "ui_placedetailsdialog.h"
 
+#include <QPushButton>
+
 PlaceDetailsDialog::PlaceDetailsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PlaceDetailsDialog)
 {
     ui->setupUi(this);
+
+    QPushButton * button = ui->buttonBox->addButton(tr("Remove place"), QDialogButtonBox::NoRole);
+    connect(button, SIGNAL(clicked()), this, SLOT(removePlace()));
 }
 
 PlaceDetailsDialog::~PlaceDetailsDialog()
@@ -55,4 +60,10 @@ setWebsiteUrl(const QString & v)
         QString("<html><body><a href=\"%1\">%1</a></body></html>")
         .arg(v)
     );
+}
+
+void PlaceDetailsDialog::
+removePlace()
+{
+    done(ToRemove);
 }
