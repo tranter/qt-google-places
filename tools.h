@@ -10,6 +10,8 @@ public:
     static QStringList getLanguageList();
     static QStringList getTypesList();
 
+    static QRegExp locationRegExp();
+
 private:
     static QStringList readList(const QString & filename);
 

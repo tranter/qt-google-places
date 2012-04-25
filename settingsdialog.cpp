@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
+#include "tools.h"
 
 #include <QSettings>
 
@@ -15,7 +16,7 @@ SettingsDialog::SettingsDialog(
 {
     ui->setupUi(this);
     ui->apiKeyLineEdit->setValidator( new QRegExpValidator(QRegExp("\\S+"), this) );
-    ui->locationLineEdit->setValidator( new QRegExpValidator(QRegExp("\\d+(\\.\\d+){0,1}\\,\\d+(\\.\\d+){0,1}"), this) );
+    ui->locationLineEdit->setValidator( new QRegExpValidator( Tools::locationRegExp(), this) );
 
     QSettings settings(m_organizationName, m_appName);
 

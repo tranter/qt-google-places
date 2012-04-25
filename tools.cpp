@@ -41,3 +41,8 @@ getTypesList()
     if( m_types.isEmpty() ) m_types = readList(":/other/types.txt");
     return m_types;
 }
+
+QRegExp Tools::
+locationRegExp() {
+    return QRegExp("-{0,1}\\d+(\\.\\d+){0,1}\\,-{0,1}\\d+(\\.\\d+){0,1}");
+}

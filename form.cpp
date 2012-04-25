@@ -12,7 +12,6 @@
 #include <QtWebKit>
 
 #include <QJson/QObjectHelper>
-//#include <qjson/qobjecthelper.h>
 
 /*! \brief Workaround pan/zoom problem with Google Map and QWebView:
  *

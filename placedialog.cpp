@@ -14,7 +14,7 @@ PlaceDialog::PlaceDialog(QWidget *parent) :
     ui->availableListWidget->addItems( Tools::getTypesList() );
     ui->availableListWidget->takeItem(0); // removing empty item
 
-    ui->locationLineEdit->setValidator( new QRegExpValidator(QRegExp("\\d+(\\.\\d+){0,1}\\,\\d+(\\.\\d+){0,1}"), this) );
+    ui->locationLineEdit->setValidator( new QRegExpValidator( Tools::locationRegExp() , this) );
 }
 
 PlaceDialog::~PlaceDialog()

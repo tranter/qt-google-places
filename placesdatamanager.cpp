@@ -1,7 +1,7 @@
 #include "placesdatamanager.h"
 #include "datamanagerhelper.h"
 
-#include <qjson/serializer.h>
+#include <QJson/Serializer>
 
 #include <QNetworkReply>
 #include <QApplication>
