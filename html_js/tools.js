@@ -21,6 +21,18 @@ function appendMarker(jsonObj)
     markers.push(marker)
 }
 
+function gotoPlace(json, zoom)
+{
+    map.setCenter( new google.maps.LatLng( json.geometry.location.lat, json.geometry.location.lng ) )
+    map.setZoom(zoom)
+}
+
+function gotoLocation( lat, lng, zoom )
+{
+    map.setCenter( new google.maps.LatLng( lat, lng ) )
+    map.setZoom(zoom)
+}
+
 function recreateSearchCircle(lat, lng, radius)
 {
     var searchCircleOptions = {

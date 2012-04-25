@@ -30,6 +30,7 @@ private slots:
     void findedPlaces(const QVariant & data);
     void autocompleteData(const QVariant & data);
     void autocompleteItemDoubleClicked(const QModelIndex &);
+    void gotoPlace(const QModelIndex &);
 
 private:
     void setupSearchOptionComboboxes();

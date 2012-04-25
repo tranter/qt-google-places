@@ -18,6 +18,8 @@ public:
     void removeMarkers();
     void createMarkers(const QVariantList & list);
     void recreateSearchCircle(const QString & location, const QString & radius);
+    void gotoPlace(const QVariant & place, int zoom);
+    void gotoLocation( const QString & location, int zoom );
 
 private:
     QVariant eval(const QString & script) const;

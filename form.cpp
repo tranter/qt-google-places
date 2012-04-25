@@ -34,7 +34,7 @@ Form(QWidget *parent) :
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
     connect(ui->autocompleteListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(autocompleteItemDoubleClicked(QModelIndex)));
-
+    connect(ui->placesListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(gotoPlace(QModelIndex)));
 
     m_organizationName = "ICS";
     m_appName = "QtGooglePlaces";
@@ -172,6 +172,8 @@ searchPlace()
         ui->langageComboBox->currentText(), ui->placesTypesComboBox->currentText(),
         location, radius
     );
+
+    //m_pJsManager->gotoLocation( location, 9 );
 }
 
 
@@ -215,4 +217,20 @@ setupSearchOptionComboboxes()
     );
     ui->langageComboBox->setCurrentIndex(-1);
     ui->placesTypesComboBox->setCurrentIndex(-1);
+}
+
+void Form::
+gotoPlace(const QModelIndex & index)
+{
+    qDebug() << Q_FUNC_INFO << index.data();
+    QVariant data( m_pPlacesModel->data(index.row()) );
+
+    qDebug() << data;
+
+    if( ! data.isValid() ) {
+        errorOccured("Empty data");
+        return;
+    }
+
+    m_pJsManager->gotoPlace( data, 17 );
 }

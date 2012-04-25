@@ -50,3 +50,18 @@ recreateSearchCircle(const QString & location, const QString & radius)
 {
     eval( QString("recreateSearchCircle(%1, %2)").arg(location, radius) );
 }
+
+void PlacesJsManager::
+gotoPlace(const QVariant & place, int zoom)
+{
+    QJson::Serializer serializer;
+    QString json = serializer.serialize( place );
+
+    eval( QString("gotoPlace(%1, %2)").arg( json ).arg(zoom) );
+}
+
+void PlacesJsManager::
+gotoLocation( const QString & location, int zoom )
+{
+    eval( QString("gotoLocation(%1, %2)").arg( location ).arg(zoom) );
+}
