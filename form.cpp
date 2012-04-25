@@ -27,6 +27,7 @@ Form(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->webView->setPage( new WebPage(this) );
+    setupSearchOptionComboboxes();
 
     connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(initMap(bool)));
     connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachJsObjects()));
@@ -166,7 +167,11 @@ searchPlace()
 
     QString location = m_pJsManager->getCurrentPointOfView();
 
-    m_pDataManager->searchPlace(m_strApiKey, QString(), location, radius, false);
+    m_pDataManager->searchPlace(
+        m_strApiKey, place,
+        ui->langageComboBox->currentText(), ui->placesTypesComboBox->currentText(),
+        location, radius
+    );
 }
 
 
@@ -195,4 +200,19 @@ void Form::
 autocompleteItemDoubleClicked(const QModelIndex & index)
 {
     ui->searchLineEdit->setText( index.data().toString() );
+}
+
+void Form::
+setupSearchOptionComboboxes()
+{
+    ui->langageComboBox->addItems(
+        QStringList() << "en" << "fr" << "ja" << "pl" << "ru" << "sl"
+    );
+    ui->placesTypesComboBox->addItems(
+        QStringList()
+                << "airport" << "bank" << "bar" << "bus_station"
+                << "cafe" << "food" << "museum" << "park" << "police" << "zoo"
+    );
+    ui->langageComboBox->setCurrentIndex(-1);
+    ui->placesTypesComboBox->setCurrentIndex(-1);
 }

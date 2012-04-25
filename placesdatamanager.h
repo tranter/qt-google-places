@@ -22,9 +22,12 @@ public slots:
                       const QString & location = QString(), const QString & radius = QString(),
                       bool sensor = false);
 
-    void searchPlace( const QString & apiKey, const QString & types = QString(),
-                      const QString & location = QString(), const QString & radius = QString(),
-                      bool sensor = false);
+    void searchPlace(
+            const QString & apiKey, const QString & keyword,
+            const QString & language, const QString & type,
+            const QString & location, const QString & radius,
+            bool sensor = false
+    );
 
 signals:
     void errorOccured(const QString & error) const;

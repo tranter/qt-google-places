@@ -32,6 +32,9 @@ private slots:
     void autocompleteItemDoubleClicked(const QModelIndex &);
 
 private:
+    void setupSearchOptionComboboxes();
+
+private:
     Ui::Form * ui;
     class PlacesDataManager * m_pDataManager;
     class PlacesJsManager * m_pJsManager;

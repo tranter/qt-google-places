@@ -101,7 +101,9 @@ autocomplete(
 }
 
 void PlacesDataManager::
-searchPlace( const QString & apiKey, const QString & types,
+searchPlace(
+    const QString & apiKey, const QString & keyword,
+    const QString & language, const QString & types,
     const QString & location, const QString & radius,
     bool sensor
 ) {
@@ -120,6 +122,8 @@ searchPlace( const QString & apiKey, const QString & types,
     ).arg(apiKey, location, radius, sensor ? "true" : "false");
 
     if( ! types.isEmpty() ) url.append("&types=").append(types);
+    if( ! keyword.isEmpty() ) url.append("&keyword=").append(keyword);
+    if( ! language.isEmpty() ) url.append("&language=").append(language);
 
     sendRequest(url, new DataManagerSearch(this));
 }
