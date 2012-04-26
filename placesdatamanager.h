@@ -20,7 +20,7 @@ public:
 public slots:
     void autocomplete(
             const QString & apiKey, const QString & input,
-            const QString & location = QString(), const QString & language = QString(),
+            const QString & location = QString(), const QString & language = QString(), const QString & type = QString(),
             const int radius = 0,
             bool sensor = false
     );

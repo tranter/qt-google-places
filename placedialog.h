@@ -17,6 +17,7 @@ public:
     ~PlaceDialog();
 
     void setLocation(const QString & location);
+    void setAddress(const QString & address);
     QVariantMap preparedData();
     
 private slots:

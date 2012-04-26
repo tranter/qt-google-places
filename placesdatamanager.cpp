@@ -130,7 +130,7 @@ replyFinished(QNetworkReply * reply) const
 void PlacesDataManager::
 autocomplete(
     const QString & apiKey, const QString & input,
-    const QString & location, const QString & language,
+    const QString & location, const QString & language, const QString & type,
     const int radius, bool sensor
 ) {
     qDebug() << Q_FUNC_INFO;
@@ -146,6 +146,7 @@ autocomplete(
 
     if( ! location.isEmpty() ) url.append("&location=").append(location);
     if(radius != 0)   url.append("&radius=").append(radius);
+    if( ! type.isEmpty() ) url.append("&types=").append(type);
 
     sendRequest(url, new DataManagerAutocompleter(this));
 }

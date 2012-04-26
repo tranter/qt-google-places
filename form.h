@@ -56,6 +56,8 @@ private:
     QString m_strApiKey;
     QString m_organizationName;
     QString m_appName;
+    QString m_clickedAddress;
+    QString m_clickedCoordinate;
 };
 
 #endif // FORM_H

@@ -39,6 +39,7 @@ Form(QWidget *parent) :
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
     connect(ui->langageComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
+    connect(ui->placesTypesComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
 
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
     connect(ui->autocompleteListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(autocompleteItemDoubleClicked(QModelIndex)));
@@ -172,7 +173,8 @@ searchTextChanged(const QString & text)
 
     QString location = m_pJsManager->getCurrentPointOfView();
 
-    m_pDataManager->autocomplete(m_strApiKey, ui->searchLineEdit->text(), location, ui->langageComboBox->currentText(), radius, false);
+    m_pDataManager->autocomplete(m_strApiKey, ui->searchLineEdit->text(), location, ui->langageComboBox->currentText(),
+                                 ui->placesTypesComboBox->currentText(), radius, false);
 }
 
 void Form::
@@ -225,6 +227,7 @@ void Form::
 autocompleteItemDoubleClicked(const QModelIndex & index)
 {
 //    ui->searchLineEdit->setText( index.data().toString() );
+    m_clickedAddress = index.data().toString();
     m_pDataManager->getCoordinatesByAddress(m_strApiKey, index.data().toString());
 }
 
@@ -308,6 +311,7 @@ addPlace()
 {
     PlaceDialog dialog(this);
     dialog.setLocation( m_pJsManager->getCurrentPointOfView() );
+    dialog.setAddress(m_clickedAddress);
 
     if( dialog.exec() != QDialog::Accepted )
         return;
@@ -317,6 +321,7 @@ addPlace()
 
 void Form::gotoPlaceByCoordinate(const QString &place)
 {
+    m_clickedCoordinate = place;
     QString str =
             QString("var newLoc = new google.maps.LatLng(%1); ").arg(place) +
             QString("map.setCenter(newLoc);");

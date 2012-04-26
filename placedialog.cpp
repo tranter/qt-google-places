@@ -76,6 +76,11 @@ setLocation(const QString & location)
     ui->locationLineEdit->setText(location);
 }
 
+void PlaceDialog::setAddress(const QString &address)
+{
+    ui->nameLineEdit->setText(address);
+}
+
 QVariantMap PlaceDialog::
 preparedData()
 {
