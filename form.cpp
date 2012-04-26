@@ -106,6 +106,8 @@ editSettings()
         QSettings settings(m_organizationName, m_appName);
         QString location = settings.value("location").toString();
 
+        if(location.isEmpty()) location = "-34.397, 150.644";
+
         gotoPlaceByCoordinate(location);
     }
 
