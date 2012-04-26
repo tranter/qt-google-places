@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QModelIndex>
+#include "placedialog.h"
 
 namespace Ui {
 class Form;
@@ -58,6 +59,7 @@ private:
     QString m_appName;
     QString m_clickedAddress;
     QString m_clickedCoordinate;
+    PlaceDialog *m_placeDialog;
 };
 
 #endif // FORM_H

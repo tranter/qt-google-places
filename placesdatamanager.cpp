@@ -29,7 +29,7 @@ sendRequest(const QString & url, DataManagerHelper * helper, RequestType type, c
 
     qDebug() << '\n' << Q_FUNC_INFO;
     qDebug() << percentEncUrl;
-    qDebug() << data;
+    qDebug() << "data" << data;
 
     request.setUrl( percentEncUrl );
 
@@ -122,6 +122,7 @@ replyFinished(QNetworkReply * reply) const
         return;
     }
 
+    qDebug() << "Helper object present." ;
     helper->evalData(data);
 
     helper->deleteLater();
@@ -203,8 +204,12 @@ addPlace(const QString & apiKey, const QVariant & place, bool sensor )
         "sensor=%2"
     ).arg( apiKey, sensor ? "true" : "false" );
 
+    qDebug() << "!!!!!!!!!!!!!! " << place;
+
     QJson::Serializer serializer;
     QByteArray json = serializer.serialize(place);
+
+    qDebug() << "!!!!!!!!!!!!!! " << json;
 
     sendRequest(url, new DataManagerCheckStatus(tr("Adding new place"), this), Post, json);
 }
@@ -219,7 +224,8 @@ deletePlace(const QString & apiKey, const QString & reference, bool sensor)
     ).arg( apiKey, sensor ? "true" : "false" );
 
     QString json = QString("{ \"reference\": \"%1\" }").arg(reference);
-    sendRequest(url, new DataManagerCheckStatus(tr("Deleting place"), this), Delete, json.toLatin1());
+
+    sendRequest(url, new DataManagerCheckStatus(tr("Deleting place"), this), Post, json.toLatin1());
 }
 
 void PlacesDataManager::getCoordinatesByAddress(const QString &apiKey, const QString &address)

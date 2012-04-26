@@ -6,7 +6,6 @@
 #include "variantlistmodel.h"
 #include "placedetailsdialog.h"
 #include "tools.h"
-#include "placedialog.h"
 
 #include <QtGui>
 #include <QtWebKit>
@@ -31,6 +30,9 @@ Form(QWidget *parent) :
     ui(new Ui::Form)
 {
     ui->setupUi(this);
+
+    m_placeDialog = new PlaceDialog(this);
+
     ui->webView->setPage( new WebPage(this) );
     setupSearchOptionComboboxes();
 
@@ -39,9 +41,10 @@ Form(QWidget *parent) :
 
     connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
     connect(ui->langageComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
-    connect(ui->placesTypesComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
 
-    connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
+    connect(ui->placesTypesComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchPlace()));
+    connect(ui->searchPlaceLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
+
     connect(ui->autocompleteListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(autocompleteItemDoubleClicked(QModelIndex)));
     connect(ui->placesListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(gotoPlace(QModelIndex)));
 
@@ -86,6 +89,10 @@ Form(QWidget *parent) :
 Form::
 ~Form()
 {
+    QSettings settings(m_organizationName, m_appName);
+    settings.setValue("location",m_pJsManager->getCurrentPointOfView());
+
+    if (m_placeDialog) delete m_placeDialog;
     delete ui;
 }
 
@@ -182,7 +189,7 @@ searchTextChanged(const QString & text)
 void Form::
 searchPlace()
 {
-    QString place = ui->searchLineEdit->text();
+    QString place = ui->searchPlaceLineEdit->text();
 
     if( place.isEmpty() ) {
         return;
@@ -311,14 +318,13 @@ requestStatus(const QString & operation, const QVariant & value)
 void Form::
 addPlace()
 {
-    PlaceDialog dialog(this);
-    dialog.setLocation( m_pJsManager->getCurrentPointOfView() );
-    dialog.setAddress(m_clickedAddress);
+    m_placeDialog->setLocation( m_pJsManager->getCurrentPointOfView() );
+    m_placeDialog->setAddress(m_clickedAddress);
 
-    if( dialog.exec() != QDialog::Accepted )
+    if( m_placeDialog->exec() != QDialog::Accepted )
         return;
 
-    m_pDataManager->addPlace(m_strApiKey, dialog.preparedData() );
+    m_pDataManager->addPlace(m_strApiKey, m_placeDialog->preparedData() );
 }
 
 void Form::gotoPlaceByCoordinate(const QString &place)
