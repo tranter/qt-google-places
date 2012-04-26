@@ -2,11 +2,14 @@
 #include "datamanagerhelper.h"
 
 #include <QJson/Serializer>
+#include <QJson/Parser>
 
 #include <QNetworkReply>
 #include <QApplication>
 #include <QUrl>
 #include <QDebug>
+
+
 
 PlacesDataManager::
 PlacesDataManager(QObject *parent) :
@@ -73,12 +76,43 @@ replyFinished(QNetworkReply * reply) const
     QString strUrl = reply->url().toString();
     QString data = reply->readAll();
 
-    //
-    qDebug() << Q_FUNC_INFO << "\n" << reply->operation() <<  strUrl << "\n" << data;
+    //qDebug() << Q_FUNC_INFO << "\n" << reply->operation() <<  strUrl << "\n" << data;
 
     QObject * origObject = reply->request().originatingObject();
+
+
+    //it's ok, just simple usage of QNetworkAccessManager, without DataManagerHelper
     if( ! origObject ) {
         qDebug() << "empty originating Object...";
+        qDebug() << "try simple work with result";
+        qDebug() << data;
+
+        QJson::Parser parser;
+        bool ok;
+        // json is a QString containing the data to convert
+        QVariant result = parser.parse (data.toLatin1(), &ok);
+        if(!ok)
+        {
+            emit errorOccured(QString("Cannot convert to QJson object: %1").arg(data));
+            return;
+        }
+
+        int code = result.toMap()["Status"].toMap()["code"].toInt();
+        if(code != 200)
+        {
+            emit errorOccured(QString("Code of request is: %1").arg(code));
+            return;
+        }
+        QVariantList placeMarks = result.toMap()["Placemark"].toList();
+        if (!placeMarks.empty())
+        {
+            double east  = placeMarks[0].toMap()["Point"].toMap()["coordinates"].toList()[0].toDouble();
+            double north = placeMarks[0].toMap()["Point"].toMap()["coordinates"].toList()[1].toDouble();
+
+            QString str = QString::number(north)+","+QString::number(east);
+            emit findCoordinatesByAddress(str);
+
+        }
         return;
     }
 
@@ -96,8 +130,8 @@ replyFinished(QNetworkReply * reply) const
 void PlacesDataManager::
 autocomplete(
     const QString & apiKey, const QString & input,
-    const QString & location, const QString & radius,
-    bool sensor
+    const QString & location, const QString & language,
+    const int radius, bool sensor
 ) {
     qDebug() << Q_FUNC_INFO;
     qDebug() << apiKey << input << location << radius << sensor;
@@ -106,11 +140,12 @@ autocomplete(
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?"
         "key=%1&"
         "input=%2&"
-        "sensor=%3"
-    ).arg(apiKey, input, sensor ? "true" : "false");
+        "sensor=%3&"
+        "language=%4"
+    ).arg(apiKey, input, sensor ? "true" : "false", language);
 
     if( ! location.isEmpty() ) url.append("&location=").append(location);
-    if( ! radius.isEmpty() )   url.append("&radius=").append(radius);
+    if(radius != 0)   url.append("&radius=").append(radius);
 
     sendRequest(url, new DataManagerAutocompleter(this));
 }
@@ -119,14 +154,14 @@ void PlacesDataManager::
 searchPlace(
     const QString & apiKey, const QString & keyword,
     const QString & language, const QString & types,
-    const QString & location, const QString & radius,
+    const QString & location, const int radius,
     bool sensor
 ) {
     qDebug() << Q_FUNC_INFO;
     qDebug() << apiKey << keyword << language<< types<< location << radius << sensor;
 
     if( location.isEmpty() ) { emit errorOccured("Location is empty"); return; }
-    if( radius.isEmpty() )   { emit errorOccured("Radius is empty"); return; }
+    if( radius == 0 )   { emit errorOccured("Radius is empty"); return; }
 
     QString url = QString(
         "https://maps.googleapis.com/maps/api/place/search/json?"
@@ -134,7 +169,7 @@ searchPlace(
         "location=%2&"
         "radius=%3&"
         "sensor=%4"
-    ).arg(apiKey, location, radius, sensor ? "true" : "false");
+    ).arg(apiKey, location, QString::number(radius), sensor ? "true" : "false");
 
     if( ! types.isEmpty() ) url.append("&types=").append(types);
     if( ! keyword.isEmpty() ) url.append("&keyword=").append(keyword);
@@ -184,4 +219,10 @@ deletePlace(const QString & apiKey, const QString & reference, bool sensor)
 
     QString json = QString("{ \"reference\": \"%1\" }").arg(reference);
     sendRequest(url, new DataManagerCheckStatus(tr("Deleting place"), this), Delete, json.toLatin1());
+}
+
+void PlacesDataManager::getCoordinatesByAddress(const QString &apiKey, const QString &address)
+{
+    QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
+    m_NetworkAccessManager.get(QNetworkRequest(QUrl(url)));
 }

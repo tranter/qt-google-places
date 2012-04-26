@@ -15,8 +15,8 @@ SettingsDialog::SettingsDialog(
     m_appName(appName)
 {
     ui->setupUi(this);
-    ui->apiKeyLineEdit->setValidator( new QRegExpValidator(QRegExp("\\S+"), this) );
-    ui->locationLineEdit->setValidator( new QRegExpValidator( Tools::locationRegExp(), this) );
+//    ui->apiKeyLineEdit->setValidator( new QRegExpValidator(QRegExp("\\S+"), this) );
+//    ui->locationLineEdit->setValidator( new QRegExpValidator( Tools::locationRegExp(), this) );
 
     QSettings settings(m_organizationName, m_appName);
 

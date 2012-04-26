@@ -20,14 +20,15 @@ public:
 public slots:
     void autocomplete(
             const QString & apiKey, const QString & input,
-            const QString & location = QString(), const QString & radius = QString(),
+            const QString & location = QString(), const QString & language = QString(),
+            const int radius = 0,
             bool sensor = false
     );
 
     void searchPlace(
             const QString & apiKey, const QString & keyword,
             const QString & language, const QString & type,
-            const QString & location, const QString & radius,
+            const QString & location, const int radius,
             bool sensor = false
     );
 
@@ -38,6 +39,7 @@ public slots:
 
     void addPlace(const QString & apiKey, const QVariant & place, bool sensor = false);
     void deletePlace(const QString & apiKey, const QString & reference, bool sensor = false);
+    void getCoordinatesByAddress(const QString & apiKey, const QString& address);
 
 signals:
     void errorOccured(const QString & error) const;
@@ -45,6 +47,8 @@ signals:
     void findedPlaces(const QVariant & data);
     void placeDetails(const QVariant & data);
     void requestStatus( const QString & operation, const QVariant & json );
+    void findCoordinatesByAddress(const QString & coord) const;
+
 
 private slots:
     void replyFinished(QNetworkReply * reply) const;

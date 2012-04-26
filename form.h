@@ -39,6 +39,8 @@ private slots:
 
     void addPlace();
 
+    void gotoPlaceByCoordinate(const QString & place);
+
 private:
     void setupSearchOptionComboboxes();
 
