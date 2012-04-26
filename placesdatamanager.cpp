@@ -147,7 +147,7 @@ autocomplete(
 
     if( ! location.isEmpty() ) url.append("&location=").append(location);
     if(radius != 0)   url.append("&radius=").append(radius);
-    if( ! type.isEmpty() ) url.append("&types=").append(type);
+//    if( ! type.isEmpty() ) url.append("&types=").append(type);
 
     sendRequest(url, new DataManagerAutocompleter(this));
 }
@@ -176,6 +176,8 @@ searchPlace(
     if( ! types.isEmpty() ) url.append("&types=").append(types);
     if( ! keyword.isEmpty() ) url.append("&keyword=").append(keyword);
     if( ! language.isEmpty() ) url.append("&language=").append(language);
+
+    qDebug() << "!!!!!!!!!!!!!!" << url;
 
     sendRequest(url, new DataManagerSearch(this));
 }

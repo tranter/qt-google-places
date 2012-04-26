@@ -26,7 +26,7 @@ private slots:
     void loadHtmlPage(const QString & apiKey);
     void initMap(bool);
 
-    void searchTextChanged(const QString & text);
+    void searchTextChanged();
     void searchPlace();
     void findedPlaces(const QVariant & data);
     void autocompleteData(const QVariant & data);
@@ -41,6 +41,10 @@ private slots:
     void addPlace();
 
     void gotoPlaceByCoordinate(const QString & place);
+
+    void on_pbSearchAddress_clicked();
+
+    void on_pbSearchPlace_clicked();
 
 private:
     void setupSearchOptionComboboxes();

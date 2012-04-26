@@ -39,8 +39,9 @@ Form(QWidget *parent) :
     connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(initMap(bool)));
     connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachJsObjects()));
 
-    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
-    connect(ui->langageComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged(QString)));
+//    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged()));
+    connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(searchTextChanged()));
+    connect(ui->langageComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged()));
 
     connect(ui->placesTypesComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchPlace()));
     connect(ui->searchPlaceLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
@@ -169,9 +170,9 @@ initMap(bool isok)
 }
 
 void Form::
-searchTextChanged(const QString & text)
+searchTextChanged()
 {
-    if( text.isEmpty() ) {
+    if(  ui->searchLineEdit->text().isEmpty() ) {
         m_pAutocompletModel->clear();
         return;
     }
@@ -191,9 +192,9 @@ searchPlace()
 {
     QString place = ui->searchPlaceLineEdit->text();
 
-    if( place.isEmpty() ) {
-        return;
-    }
+//    if( place.isEmpty() ) {
+//        return;
+//    }
 
     QSettings settings(m_organizationName, m_appName);
     int radius = settings.value("radius").toInt();
@@ -337,3 +338,13 @@ void Form::gotoPlaceByCoordinate(const QString &place)
     ui->webView->page()->currentFrame()->documentElement().evaluateJavaScript(str);
 }
 
+
+void Form::on_pbSearchAddress_clicked()
+{
+    searchTextChanged();
+}
+
+void Form::on_pbSearchPlace_clicked()
+{
+    searchPlace();
+}
