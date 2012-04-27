@@ -45,6 +45,7 @@ Form(QWidget *parent) :
 
     connect(ui->placesTypesComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchPlace()));
     connect(ui->searchPlaceLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
+    connect(ui->sbPlaceRadius, SIGNAL(editingFinished()), this, SLOT(searchPlace()));
 
     connect(ui->autocompleteListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(autocompleteItemDoubleClicked(QModelIndex)));
     connect(ui->placesListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(gotoPlace(QModelIndex)));
@@ -54,6 +55,7 @@ Form(QWidget *parent) :
 
     QSettings settings(m_organizationName, m_appName);
     m_strApiKey = settings.value("apiKey").toString();
+    ui->sbPlaceRadius->setValue(settings.value("radius").toInt());
 
 
     m_pDataManager = new PlacesDataManager(this);
@@ -185,6 +187,8 @@ searchTextChanged()
 
     m_pDataManager->autocomplete(m_strApiKey, ui->searchLineEdit->text(), location, ui->langageComboBox->currentText(),
                                  ui->placesTypesComboBox->currentText(), radius, false);
+
+    m_pDataManager->searchInMapByAddress(m_strApiKey, ui->searchLineEdit->text());
 }
 
 void Form::
@@ -196,10 +200,9 @@ searchPlace()
 //        return;
 //    }
 
-    QSettings settings(m_organizationName, m_appName);
-    int radius = settings.value("radius").toInt();
-    //QString location = settings.value("location").toString();
+    int radius = ui->sbPlaceRadius->value();
 
+    //QString location = settings.value("location").toString();
     QString location = m_pJsManager->getCurrentPointOfView();
 
     m_pDataManager->searchPlace(

@@ -235,3 +235,9 @@ void PlacesDataManager::getCoordinatesByAddress(const QString &apiKey, const QSt
     QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
     m_NetworkAccessManager.get(QNetworkRequest(QUrl(url)));
 }
+
+void PlacesDataManager::searchInMapByAddress(const QString &apiKey, const QString &address)
+{
+    QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
+    m_NetworkAccessManager.get(QNetworkRequest(QUrl(url)));
+}

@@ -40,6 +40,7 @@ public slots:
     void addPlace(const QString & apiKey, const QVariant & place, bool sensor = false);
     void deletePlace(const QString & apiKey, const QString & reference, bool sensor = false);
     void getCoordinatesByAddress(const QString & apiKey, const QString& address);
+    void searchInMapByAddress(const QString & apiKey, const QString & address);
 
 signals:
     void errorOccured(const QString & error) const;
