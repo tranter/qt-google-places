@@ -25,13 +25,13 @@ sendRequest(const QString & url, DataManagerHelper * helper, RequestType type, c
     QNetworkRequest request;
     request.setOriginatingObject(helper);
 
-    QUrl percentEncUrl( QUrl::toPercentEncoding(url, ":/?=&,", " ") );
+//    QUrl percentEncUrl( QUrl::toPercentEncoding(url, ":/?=&,", " ") );
+//    qDebug() << '\n' << Q_FUNC_INFO;
+//    qDebug() << percentEncUrl;
+//    qDebug() << "data" << data;
+//    request.setUrl( percentEncUrl );
 
-    qDebug() << '\n' << Q_FUNC_INFO;
-    qDebug() << percentEncUrl;
-    qDebug() << "data" << data;
-
-    request.setUrl( percentEncUrl );
+    request.setUrl( url );
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -143,11 +143,13 @@ autocomplete(
         "input=%2&"
         "sensor=%3&"
         "language=%4"
-    ).arg(apiKey, input, sensor ? "true" : "false", language);
+    ).arg(apiKey, "\""+input+"\"", sensor ? "true" : "false", language);
 
     if( ! location.isEmpty() ) url.append("&location=").append(location);
-    if(radius != 0)   url.append("&radius=").append(radius);
+//    if (radius != 0) url.append("&radius=").append(radius);
 //    if( ! type.isEmpty() ) url.append("&types=").append(type);
+
+    qDebug() << "++++++++++++++++++++++++++" << url;
 
     sendRequest(url, new DataManagerAutocompleter(this));
 }
@@ -177,7 +179,7 @@ searchPlace(
     if( ! keyword.isEmpty() ) url.append("&keyword=").append(keyword);
     if( ! language.isEmpty() ) url.append("&language=").append(language);
 
-    qDebug() << "!!!!!!!!!!!!!!" << url;
+//    qDebug() << "!!!!!!!!!!!!!!" << url;
 
     sendRequest(url, new DataManagerSearch(this));
 }
@@ -206,12 +208,12 @@ addPlace(const QString & apiKey, const QVariant & place, bool sensor )
         "sensor=%2"
     ).arg( apiKey, sensor ? "true" : "false" );
 
-    qDebug() << "!!!!!!!!!!!!!! " << place;
+//    qDebug() << "!!!!!!!!!!!!!! " << place;
 
     QJson::Serializer serializer;
     QByteArray json = serializer.serialize(place);
 
-    qDebug() << "!!!!!!!!!!!!!! " << json;
+//    qDebug() << "!!!!!!!!!!!!!! " << json;
 
     sendRequest(url, new DataManagerCheckStatus(tr("Adding new place"), this), Post, json);
 }
