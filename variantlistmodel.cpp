@@ -35,6 +35,16 @@ data(int row) const
     return row < 0 || m_data.count() <= row ? QVariant() : m_data[row];
 }
 
+QVariant VariantListModel::
+data(const QModelIndex & index, const QString & key) const
+{
+    int row = index.row();
+    if( ! index.isValid() || row < 0 || m_data.count() <= row )
+        return QVariant();
+
+    return m_data[row].toMap()[key];
+}
+
 QModelIndex VariantListModel::
 index(int row, int column, const QModelIndex & /*parent*/) const
 {

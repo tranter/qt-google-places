@@ -27,7 +27,7 @@ sendRequest(const QString & url, DataManagerHelper * helper, RequestType type, c
 
 //    QUrl percentEncUrl( QUrl::toPercentEncoding(url, ":/?=&,", " ") );
 //    qDebug() << '\n' << Q_FUNC_INFO;
-//    qDebug() << percentEncUrl;
+    qDebug() << url;
 //    qDebug() << "data" << data;
 //    request.setUrl( percentEncUrl );
 
@@ -242,4 +242,42 @@ void PlacesDataManager::searchInMapByAddress(const QString &apiKey, const QStrin
 {
     QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
     m_NetworkAccessManager.get(QNetworkRequest(QUrl(url)));
+}
+
+
+void PlacesDataManager::
+addEvent(const QString & apiKey, const QVariant & event, bool sensor)
+{
+    QString url = QString(
+        "https://maps.googleapis.com/maps/api/place/event/add/json?"
+        "key=%1&"
+        "sensor=%2"
+    ).arg( apiKey, sensor ? "true" : "false" );
+
+    QJson::Serializer serializer;
+    QByteArray json = serializer.serialize(event);
+
+    sendRequest(url, new DataManagerCheckStatus(tr("Adding new event"), this), Post, json);
+}
+
+void PlacesDataManager::
+deleteEvent(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor)
+{    
+    QString url = QString(
+        "https://maps.googleapis.com/maps/api/place/event/delete/json?"
+        "key=%1&"
+        "sensor=%2"
+    ).arg( apiKey, sensor ? "true" : "false" );
+
+    QVariantMap map; map["reference"] = referenceId; map["event_id"] = eventId;
+    QByteArray json = QJson::Serializer().serialize(map);
+
+    sendRequest( url, 0, Post, json );
+}
+
+void PlacesDataManager::
+eventDetails(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor)
+{
+    Q_UNUSED(apiKey); Q_UNUSED(referenceId); Q_UNUSED(eventId); Q_UNUSED(sensor);
+    qDebug() << "not implemented";
 }

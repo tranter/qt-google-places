@@ -6,6 +6,7 @@
 #include "variantlistmodel.h"
 #include "placedetailsdialog.h"
 #include "tools.h"
+#include "eventdialog.h"
 
 #include <QtGui>
 #include <QtWebKit>
@@ -293,7 +294,9 @@ showPlaceInformation(const QVariant & info)
     PlaceDetailsDialog details;
     QJson::QObjectHelper::qvariant2qobject(map, & details);
 
-    if( details.exec() == PlaceDetailsDialog::ToRemove
+    int ret = details.exec();
+
+    if( ret == PlaceDetailsDialog::ToRemove
         &&
             QMessageBox::question(
                 this,
@@ -303,6 +306,15 @@ showPlaceInformation(const QVariant & info)
             ) == QMessageBox::Yes
     ) {
         m_pDataManager->deletePlace(m_strApiKey, details.reference());
+    }
+    else if( ret == PlaceDetailsDialog::AddEvent )
+    {
+        addEvent( details.reference() );
+    }
+    else if( ret == PlaceDetailsDialog::RemoveEvents )
+    {
+        foreach(const QString id, details.selectedEvents())
+            m_pDataManager->deleteEvent(m_strApiKey, details.reference(), id);
     }
 }
 
@@ -329,6 +341,18 @@ addPlace()
         return;
 
     m_pDataManager->addPlace(m_strApiKey, m_placeDialog->preparedData() );
+}
+
+void Form::
+addEvent(const QString & reference)
+{
+    EventDialog dialog(this);
+    dialog.setReference(reference);
+
+    if( dialog.exec() != QDialog::Accepted )
+        return;
+
+    m_pDataManager->addEvent( m_strApiKey, dialog.getJSONobject() );
 }
 
 void Form::gotoPlaceByCoordinate(const QString &place)

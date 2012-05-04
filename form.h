@@ -39,11 +39,10 @@ private slots:
     void requestStatus(const QString & operation, const QVariant & value);
 
     void addPlace();
+    void addEvent(const QString & reference);
 
     void gotoPlaceByCoordinate(const QString & place);
-
     void on_pbSearchAddress_clicked();
-
     void on_pbSearchPlace_clicked();
 
 private:

@@ -18,6 +18,7 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant data(int row) const;
+    QVariant data(const QModelIndex &index, const QString & key) const;
 
     QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child = QModelIndex()) const { Q_UNUSED(child) return QModelIndex(); }

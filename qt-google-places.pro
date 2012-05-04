@@ -32,7 +32,8 @@ SOURCES += \
     variantlistmodel.cpp \
     placedetailsdialog.cpp \
     placedialog.cpp \
-    tools.cpp
+    tools.cpp \
+    eventdialog.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -44,14 +45,16 @@ HEADERS += \
     variantlistmodel.h \
     placedetailsdialog.h \
     placedialog.h \
-    tools.h
+    tools.h \
+    eventdialog.h
 
 FORMS += \
     mainwindow.ui \
     form.ui \
     settingsdialog.ui \
     placedetailsdialog.ui \
-    placedialog.ui
+    placedialog.ui \
+    eventdialog.ui
 
 RESOURCES += \
     resources.qrc
