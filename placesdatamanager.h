@@ -44,7 +44,7 @@ public slots:
 
     void addEvent(const QString & apiKey, const QVariant & jsonEvent, bool sensor = false);
     void deleteEvent(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor = false);
-    void eventDetails(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor = false);
+    //void eventDetails(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor = false);
 
 signals:
     void errorOccured(const QString & error) const;

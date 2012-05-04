@@ -7,9 +7,8 @@
 #include <QNetworkReply>
 #include <QApplication>
 #include <QUrl>
-#include <QDebug>
 
-
+//#include <QDebug>
 
 PlacesDataManager::
 PlacesDataManager(QObject *parent) :
@@ -25,11 +24,9 @@ sendRequest(const QString & url, DataManagerHelper * helper, RequestType type, c
     QNetworkRequest request;
     request.setOriginatingObject(helper);
 
-//    QUrl percentEncUrl( QUrl::toPercentEncoding(url, ":/?=&,", " ") );
-//    qDebug() << '\n' << Q_FUNC_INFO;
-    qDebug() << url;
+//    qDebug() << Q_FUNC_INFO;
+//    qDebug() << url;
 //    qDebug() << "data" << data;
-//    request.setUrl( percentEncUrl );
 
     request.setUrl( url );
 
@@ -83,9 +80,9 @@ replyFinished(QNetworkReply * reply) const
 
     //it's ok, just simple usage of QNetworkAccessManager, without DataManagerHelper
     if( ! origObject ) {
-        qDebug() << "empty originating Object...";
-        qDebug() << "try simple work with result";
-        qDebug() << data;
+        //qDebug() << "empty originating Object...";
+        //qDebug() << "try simple work with result";
+        //qDebug() << data;
 
         QJson::Parser parser;
         bool ok;
@@ -118,24 +115,23 @@ replyFinished(QNetworkReply * reply) const
 
     DataManagerHelper * helper = qobject_cast<DataManagerHelper*>(origObject);
     if( ! helper ) {
-        qDebug() << "empty helper Object...";
+        //qDebug() << "empty helper Object...";
         return;
     }
 
-    qDebug() << "Helper object present." ;
+    //qDebug() << "Helper object present." ;
     helper->evalData(data);
-
     helper->deleteLater();
 }
 
 void PlacesDataManager::
 autocomplete(
     const QString & apiKey, const QString & input,
-    const QString & location, const QString & language, const QString & type,
-    const int radius, bool sensor
+    const QString & location, const QString & language, const QString & /*type*/,
+    const int /*radius*/, bool sensor
 ) {
-    qDebug() << Q_FUNC_INFO;
-    qDebug() << apiKey << input << location << radius << sensor;
+    //qDebug() << Q_FUNC_INFO;
+    //qDebug() << apiKey << input << location << radius << sensor;
 
     QString url = QString(
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?"
@@ -146,10 +142,6 @@ autocomplete(
     ).arg(apiKey, "\""+input+"\"", sensor ? "true" : "false", language);
 
     if( ! location.isEmpty() ) url.append("&location=").append(location);
-//    if (radius != 0) url.append("&radius=").append(radius);
-//    if( ! type.isEmpty() ) url.append("&types=").append(type);
-
-    qDebug() << "++++++++++++++++++++++++++" << url;
 
     sendRequest(url, new DataManagerAutocompleter(this));
 }
@@ -161,8 +153,8 @@ searchPlace(
     const QString & location, const int radius,
     bool sensor
 ) {
-    qDebug() << Q_FUNC_INFO;
-    qDebug() << apiKey << keyword << language<< types<< location << radius << sensor;
+    //qDebug() << Q_FUNC_INFO;
+    //qDebug() << apiKey << keyword << language<< types<< location << radius << sensor;
 
     if( location.isEmpty() ) { emit errorOccured("Location is empty"); return; }
     if( radius == 0 )   { emit errorOccured("Radius is empty"); return; }
@@ -178,8 +170,6 @@ searchPlace(
     if( ! types.isEmpty() ) url.append("&types=").append(types);
     if( ! keyword.isEmpty() ) url.append("&keyword=").append(keyword);
     if( ! language.isEmpty() ) url.append("&language=").append(language);
-
-//    qDebug() << "!!!!!!!!!!!!!!" << url;
 
     sendRequest(url, new DataManagerSearch(this));
 }
@@ -208,12 +198,8 @@ addPlace(const QString & apiKey, const QVariant & place, bool sensor )
         "sensor=%2"
     ).arg( apiKey, sensor ? "true" : "false" );
 
-//    qDebug() << "!!!!!!!!!!!!!! " << place;
-
     QJson::Serializer serializer;
     QByteArray json = serializer.serialize(place);
-
-//    qDebug() << "!!!!!!!!!!!!!! " << json;
 
     sendRequest(url, new DataManagerCheckStatus(tr("Adding new place"), this), Post, json);
 }
@@ -275,9 +261,9 @@ deleteEvent(const QString & apiKey, const QString & referenceId, const QString &
     sendRequest( url, 0, Post, json );
 }
 
-void PlacesDataManager::
-eventDetails(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor)
-{
-    Q_UNUSED(apiKey); Q_UNUSED(referenceId); Q_UNUSED(eventId); Q_UNUSED(sensor);
-    qDebug() << "not implemented";
-}
+//void PlacesDataManager::
+//eventDetails(const QString & apiKey, const QString & referenceId, const QString & eventId, bool sensor)
+//{
+//    Q_UNUSED(apiKey); Q_UNUSED(referenceId); Q_UNUSED(eventId); Q_UNUSED(sensor);
+//    //qDebug() << "not implemented";
+//}

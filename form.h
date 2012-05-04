@@ -54,7 +54,6 @@ private:
     class PlacesJsManager * m_pJsManager;
 
     class VariantListModel * m_pAutocompletModel;
-    //class QCompleter * m_pSearchCompleter;
     class VariantListModel * m_pPlacesModel;
 
     QString m_strApiKey;

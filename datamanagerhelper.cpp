@@ -4,8 +4,6 @@
 #include <QVariant>
 #include <QJson/Parser>
 
-#include <QDebug>
-
 QVariant DataManagerHelper::
 parseJsonData(const QVariant & data)
 {

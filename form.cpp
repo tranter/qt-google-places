@@ -40,7 +40,6 @@ Form(QWidget *parent) :
     connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(initMap(bool)));
     connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachJsObjects()));
 
-//    connect(ui->searchLineEdit, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged()));
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(searchTextChanged()));
     connect(ui->langageComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged()));
 
@@ -60,16 +59,12 @@ Form(QWidget *parent) :
 
 
     m_pDataManager = new PlacesDataManager(this);
-    //m_pDataManager->setApiKey( m_strApiKey );
 
     m_pJsManager = new PlacesJsManager(this);
     m_pJsManager->setFrame( ui->webView->page()->mainFrame() );
 
     m_pAutocompletModel = new VariantListModel(this);
     m_pAutocompletModel->setKey("description");
-    //m_pSearchCompleter = new QCompleter(this);
-    //m_pSearchCompleter->setModel(m_pAutocompletModel);
-    //ui->searchLineEdit->setCompleter(m_pSearchCompleter);
     ui->autocompleteListView->setModel(m_pAutocompletModel);
 
     m_pPlacesModel = new VariantListModel(this);
@@ -133,7 +128,7 @@ attachJsObjects()
 void Form::
 loadHtmlPage(const QString & /*apiKey*/)
 {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
 
     QFile htmlFile(":/html/index.html");
     if( ! htmlFile.open(QFile::ReadOnly) )
@@ -182,7 +177,6 @@ searchTextChanged()
 
     QSettings settings(m_organizationName, m_appName);
     int radius = settings.value("radius").toInt();
-    //QString location = settings.value("location").toString();
 
     QString location = m_pJsManager->getCurrentPointOfView();
 
@@ -203,7 +197,6 @@ searchPlace()
 
     int radius = ui->sbPlaceRadius->value();
 
-    //QString location = settings.value("location").toString();
     QString location = m_pJsManager->getCurrentPointOfView();
 
     m_pDataManager->searchPlace(
@@ -222,25 +215,17 @@ findedPlaces(const QVariant & data)
     m_pPlacesModel->setData(data);
     m_pJsManager->removeMarkers();
     m_pJsManager->createMarkers(data.toList());
-
-//    QSettings settings(m_organizationName, m_appName);
-//    QString radius = settings.value("radius").toString();
-//    QString location = m_pJsManager->getCurrentPointOfView();
-
-//    m_pJsManager->recreateSearchCircle(location, radius);
 }
 
 void Form::
 autocompleteData(const QVariant & data)
 {
     m_pAutocompletModel->setData(data);
-//    ui->autocompleteListView->setCurrentIndex(4);
 }
 
 void Form::
 autocompleteItemDoubleClicked(const QModelIndex & index)
 {
-//    ui->searchLineEdit->setText( index.data().toString() );
     m_clickedAddress = index.data().toString();
     m_pDataManager->getCoordinatesByAddress(m_strApiKey, index.data().toString());
 }
@@ -257,10 +242,8 @@ setupSearchOptionComboboxes()
 void Form::
 gotoPlace(const QModelIndex & index)
 {
-    qDebug() << Q_FUNC_INFO << index.data();
+//    qDebug() << Q_FUNC_INFO << index.data();
     QVariant data( m_pPlacesModel->data(index.row()) );
-
-    qDebug() << data;
 
     if( ! data.isValid() ) {
         errorOccured("Empty data");
@@ -361,7 +344,6 @@ void Form::gotoPlaceByCoordinate(const QString &place)
     QString str =
             QString("var newLoc = new google.maps.LatLng(%1); ").arg(place) +
             QString("map.setCenter(newLoc);");
-    qDebug() << str;
     ui->webView->page()->currentFrame()->documentElement().evaluateJavaScript(str);
 }
 

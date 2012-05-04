@@ -1,7 +1,6 @@
 #include "placesjsmanager.h"
 
 #include <QWebFrame>
-#include <QDebug>
 #include <QMessageBox>
 
 #include <QJson/Serializer>
@@ -33,8 +32,6 @@ removeMarkers()
 void PlacesJsManager::
 createMarkers(const QVariantList & list)
 {
-    qDebug() << Q_FUNC_INFO << list.count();
-
     QJson::Serializer serializer;
     QString json;
 
