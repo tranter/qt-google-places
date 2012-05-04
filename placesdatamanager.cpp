@@ -98,7 +98,7 @@ replyFinished(QNetworkReply * reply) const
         }
 
         int code = result.toMap()["Status"].toMap()["code"].toInt();
-        if(code != 200)
+        if(code != 200 && code != 0)
         {
             emit errorOccured(QString("Code of request is: %1").arg(code));
             return;

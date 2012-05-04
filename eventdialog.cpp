@@ -3,6 +3,8 @@
 
 #include "tools.h"
 
+#include <QMessageBox>
+
 EventDialog::
 EventDialog(QWidget *parent) :
     QDialog(parent),
@@ -48,4 +50,15 @@ duration() const
     }
 
     return ui->durationSpinBox->value() * 60;
+}
+
+void EventDialog::
+accept()
+{
+    if( ui->summaryTextEdit->toPlainText().trimmed().isEmpty() )
+    {
+        QMessageBox::warning(this, tr("Error"), tr("Summary field is empty"));
+        return;
+    }
+    QDialog::accept();
 }

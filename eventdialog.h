@@ -20,6 +20,7 @@ public:
 
 private:
     int duration() const;
+    void accept();
 
 public slots:
     void setReference(const QString & reference) { m_reference = reference; }
