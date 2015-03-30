@@ -10,6 +10,8 @@
 
 #include <QtGui>
 #include <QtWebKit>
+#include <QWebFrame>
+#include <QMessageBox>
 
 #include <QJson/QObjectHelper>
 
