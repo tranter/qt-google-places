@@ -42,8 +42,6 @@ private slots:
     void addEvent(const QString & reference);
 
     void gotoPlaceByCoordinate(const QString & place);
-    void on_pbSearchAddress_clicked();
-    void on_pbSearchPlace_clicked();
 
 private:
     void setupSearchOptionComboboxes();

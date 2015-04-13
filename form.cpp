@@ -43,11 +43,13 @@ Form(QWidget *parent) :
     connect(ui->webView->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(attachJsObjects()));
 
     connect(ui->searchLineEdit, SIGNAL(returnPressed()), this, SLOT(searchTextChanged()));
-    connect(ui->langageComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchTextChanged()));
+    connect(ui->langageComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(searchTextChanged()));
+    connect(ui->pbSearchAddress, SIGNAL(clicked()), this, SLOT(searchTextChanged()));
 
-    connect(ui->placesTypesComboBox, SIGNAL(textChanged(QString)), this, SLOT(searchPlace()));
+    connect(ui->placesTypesComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(searchPlace()));
     connect(ui->searchPlaceLineEdit, SIGNAL(returnPressed()), this, SLOT(searchPlace()));
     connect(ui->sbPlaceRadius, SIGNAL(editingFinished()), this, SLOT(searchPlace()));
+    connect(ui->pbSearchPlace, SIGNAL(clicked()), this, SLOT(searchPlace()));
 
     connect(ui->autocompleteListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(autocompleteItemDoubleClicked(QModelIndex)));
     connect(ui->placesListView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(gotoPlace(QModelIndex)));
@@ -350,12 +352,3 @@ void Form::gotoPlaceByCoordinate(const QString &place)
 }
 
 
-void Form::on_pbSearchAddress_clicked()
-{
-    searchTextChanged();
-}
-
-void Form::on_pbSearchPlace_clicked()
-{
-    searchPlace();
-}
