@@ -36,7 +36,7 @@ Form(QWidget *parent) :
 
     m_placeDialog = new PlaceDialog(this);
 
-    ui->webView->setPage( new WebPage(this) );
+    //ui->webView->setPage( new WebPage(this) );
     setupSearchOptionComboboxes();
 
     connect(ui->webView, SIGNAL(loadFinished(bool)), this, SLOT(initMap(bool)));
