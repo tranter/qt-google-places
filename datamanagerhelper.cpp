@@ -11,9 +11,17 @@ parseJsonData(const QVariant & data)
     bool ok;
 
     QString strData( data.toString() );
-    QByteArray latin1( strData.toLatin1() );
 
-    QVariant result = parser.parse(latin1, & ok);
+#if QT_VERSION >= 0x050000
+        // Qt5 code
+    QByteArray arr( strData.toUtf8() );
+#else
+        // Qt4 code
+    QByteArray arr( strData.toLatin1() );
+#endif
+
+
+    QVariant result = parser.parse(arr, & ok);
 
     if( ! ok ) {
         manager->errorOccured( QString("Cannot convert to QJson object:\n%1").arg(strData.left(32)).append("\n...") );

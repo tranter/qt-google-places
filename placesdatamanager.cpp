@@ -77,6 +77,8 @@ replyFinished(QNetworkReply * reply) const
 
     QObject * origObject = reply->request().originatingObject();
 
+    //qDebug() << Q_FUNC_INFO << "origObject ="  << origObject;
+
 
     //it's ok, just simple usage of QNetworkAccessManager, without DataManagerHelper
     if( ! origObject ) {
@@ -87,7 +89,16 @@ replyFinished(QNetworkReply * reply) const
         QJson::Parser parser;
         bool ok;
         // json is a QString containing the data to convert
+
+#if QT_VERSION >= 0x050000
+        // Qt5 code
+        QVariant result = parser.parse (data.toUtf8(), &ok);
+#else
+        // Qt4 code
         QVariant result = parser.parse (data.toLatin1(), &ok);
+#endif
+
+
         if(!ok)
         {
             emit errorOccured(QString("Cannot convert to QJson object: %1").arg(data));
@@ -101,10 +112,19 @@ replyFinished(QNetworkReply * reply) const
             return;
         }
         QVariantList placeMarks = result.toMap()["Placemark"].toList();
-        if (!placeMarks.empty())
+
+        //qDebug() << "placeMarks" << placeMarks;
+
+        if (placeMarks.empty())
         {
-            double east  = placeMarks[0].toMap()["Point"].toMap()["coordinates"].toList()[0].toDouble();
-            double north = placeMarks[0].toMap()["Point"].toMap()["coordinates"].toList()[1].toDouble();
+            //qDebug() << result;
+            QVariantList results = result.toMap()["results"].toList();
+
+            //qDebug() << results;
+
+
+            double east  = results[0].toMap()["geometry"].toMap()["location"].toMap()["lng"].toDouble();
+            double north = results[0].toMap()["geometry"].toMap()["location"].toMap()["lat"].toDouble();
 
             QString str = QString::number(north)+","+QString::number(east);
             emit findCoordinatesByAddress(str);
@@ -220,13 +240,19 @@ deletePlace(const QString & apiKey, const QString & reference, bool sensor)
 
 void PlacesDataManager::getCoordinatesByAddress(const QString &apiKey, const QString &address)
 {
-    QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
+    qDebug() << "PlacesDataManager::getCoordinatesByAddress";
+    QString url = QString("http://maps.google.com/maps/api/geocode/json?address=%1&sensor=false&language=en").arg(address);
+
+
+    //QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
     m_NetworkAccessManager.get(QNetworkRequest(QUrl(url)));
 }
 
 void PlacesDataManager::searchInMapByAddress(const QString &apiKey, const QString &address)
 {
-    QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
+    qDebug() << "PlacesDataManager::searchInMapByAddress";
+    QString url = QString("http://maps.google.com/maps/api/geocode/json?address=%1&sensor=false&language=en").arg(address);
+    //QString url = QString("http://maps.google.com/maps/geo?q=%1&key=%2&output=json&oe=utf8&sensor=false").arg(address).arg(apiKey);
     m_NetworkAccessManager.get(QNetworkRequest(QUrl(url)));
 }
 
