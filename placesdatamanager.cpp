@@ -8,7 +8,7 @@
 #include <QApplication>
 #include <QUrl>
 
-//#include <QDebug>
+#include <QDebug>
 
 PlacesDataManager::
 PlacesDataManager(QObject *parent) :
